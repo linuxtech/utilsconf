@@ -2,7 +2,7 @@
 (show-paren-mode 1)
 
 (menu-bar-mode 0)
-(tool-bar-mode 0)
+(setq tool-bar-mode 0)
 (load-theme 'tango-dark)
 
 ;; Add repo
