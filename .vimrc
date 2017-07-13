@@ -67,12 +67,19 @@ set browsedir=current
 set complete+=k                 
 set tabline=%!MyTabLine()
 
-map <F3> <esc>:V<CR>
+imap <F2> <esc>:w<CR>a
+map <F2> <esc>:w<CR>
+imap <F3> <esc>v
+nmap <F3> v
+imap <F5> <esc>:tabprevious<CR>a
 map <F5> <esc>:tabprevious<CR>
+imap <F6> <esc>:tabnext<CR>a
 map <F6> <esc>:tabnext<CR>
+imap <F7> <esc>:tabnew<CR>a
 map <F7> <esc>:tabnew<CR>
+imap <F7><F7> <esc>:tabnew<CR>:Explore<CR>
 map <F7><F7> <esc>:tabnew<CR>:Explore<CR>
-map <F2> <esc>:w<CR>a
+imap <C-\> <esc>:vs<CR>a
 map <C-\> :vs<CR>
 
 "Window commands
