@@ -67,7 +67,7 @@ set browsedir=current
 set complete+=k                 
 set tabline=%!MyTabLine()
 
-
+map <F3> <esc>:V<CR>
 map <F5> <esc>:tabprevious<CR>
 map <F6> <esc>:tabnext<CR>
 map <F7> <esc>:tabnew<CR>
