@@ -4,4 +4,4 @@ Move file between repo's
 3. Merge content without commit. Execute 'git merge <src_name>/master --no-commit'
 4. Make all necessary changes (move files, remove unnecessary files, etc.
 5. Commit and push changes to the dst repository. Execute 'git commit', 'git push origin master'.
-
+6. Remove src remote. Execute 'git remote rm <src_name>'
