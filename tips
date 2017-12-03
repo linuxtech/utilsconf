@@ -1,0 +1,7 @@
+Move file between repo's
+1. Go to dst repo, add new one remote src. Execute 'git remote add <src_name> <path_to_src_repo>'
+2. Fetch content from src repo. Execute 'git fetch <src_name>'
+3. Merge content without commit. Execute 'git merge <src_name>/master --no-commit'
+4. Make all necessary changes (move files, remove unnecessary files, etc.
+5. Commit and push changes to the dst repository. Execute 'git commit', 'git push origin master'.
+
