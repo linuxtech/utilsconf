@@ -41,6 +41,10 @@ function MyGuiTabLabel()
 endfunction
 
 set nocompatible
+syntax on
+set tabstop=4
+set shiftwidth=4
+set autoindent
 
 let s:black = ["#1C1B19", 0]
 let s:bright_black = ["#2D2C29", 8]
