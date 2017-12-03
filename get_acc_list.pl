@@ -12,64 +12,60 @@ my @PASSWD_FORMAT = ('user','pass','uid','gid','info','home','shell');
 my @SHADOW_FORMAT = ('user','pass','last_changed','changed_before','must_changed','exp_warn','expires_in','disabled_since','reserved');
 my @GROUP_FORMAT = ('group','pass','gid','members');
 
-if(scalar @ARGV > 0){
+open $PW, '<', '/etc/passwd' or die('Can not open /etc/passwd');
+open $SH, '<', '/etc/shadow' or die('Can not open /etc/passwd');
+open $GR, '<', '/etc/group' or die('Can not open /etc/passwd');
+
+foreach (<$PW>) {
+	chomp;
+	my %record;
+	@record{@PASSWD_FORMAT} = split /:/;
+	$PASSWD{$record{'user'}} = \%record;
+
+#Ensure no duplicate user names exist
+	if(defined $UID_NAME{$record{'user'}}){print "Duplicate user name: $record{'user'}\n"}
+	else {$UID_NAME{$record{'user'}}=1};
+
+#Ensure no duplicate UIDs exist
+	if(defined $UID{$record{'uid'}}){print "Duplicate UID: $record{'uid'}\n"}
+	else {$UID{$record{'uid'}}=1};
+} 
+
+foreach (<$SH>) {
+	chomp;
+	my %record;
+	@record{@SHADOW_FORMAT} = split /:/;
+	$SHADOW{$record{'user'}} = \%record;
+}
+
+foreach (<$GR>) {
+	chomp;
+	my %record;
+	@record{@GROUP_FORMAT} = split /:/;
+	$GROUP{$record{'group'}} = \%record;
+
+#Ensure no duplicate group names exist
+	if(defined $GID_NAME{$record{'group'}}){print "Duplicate group name: $record{'group'}\n"}
+	else {$GID_NAME{$record{'group'}}=1};
 	
-	open $PW, '<', '/etc/passwd' or die('Can not open /etc/passwd');
-	open $SH, '<', '/etc/shadow' or die('Can not open /etc/passwd');
-	open $GR, '<', '/etc/group' or die('Can not open /etc/passwd');
+#Ensure no duplicate GIDs exist
+	if(defined $GID{$record{'gid'}}){print "Duplicate GID: $record{'gid'}\n"}
+	else {$GID{$record{'gid'}}=1};
+}
+close $PW;
+close $SH;
+close $GR;
 
-
-	foreach (<$PW>) {
-		chomp;
-		my %record;
-		@record{@PASSWD_FORMAT} = split /:/;
-		$PASSWD{$record{'user'}} = \%record;
-	#Ensure no duplicate user names exist
-		if(defined $UID_NAME{$record{'user'}}){print "Duplicate user name: $record{'user'}\n"}
-		else {$UID_NAME{$record{'user'}}=1};
-
-	#Ensure no duplicate UIDs exist
-		if(defined $UID{$record{'uid'}}){print "Duplicate UID: $record{'uid'}\n"}
-		else {$UID{$record{'uid'}}=1};
-	} 
-	foreach (<$SH>) {
-		chomp;
-		my %record;
-		@record{@SHADOW_FORMAT} = split /:/;
-		$SHADOW{$record{'user'}} = \%record;
+my %checks;
+@checks{@ARGV} = @ARGV;
+if (defined $checks{'help'} || keys( %checks ) == 0){$CHECK{'help'}->{'func'}->()}
+elsif (defined $checks{'all'}){$CHECK{'all'}->{'func'}->()}
+else {
+	foreach (sort keys %checks) {
+		if(defined($CHECK{$_})){
+			$CHECK{$_}->{'func'}->();
+		} else {print "$_ check not implemented\n"; exit 1;}
 	}
-
-	foreach (<$GR>) {
-		chomp;
-		my %record;
-		@record{@GROUP_FORMAT} = split /:/;
-		$GROUP{$record{'group'}} = \%record;
-
-	#Ensure no duplicate group names exist
-		if(defined $GID_NAME{$record{'group'}}){print "Duplicate group name: $record{'group'}\n"}
-		else {$GID_NAME{$record{'group'}}=1};
-	
-	#Ensure no duplicate GIDs exist
-		if(defined $GID{$record{'gid'}}){print "Duplicate GID: $record{'gid'}\n"}
-		else {$GID{$record{'gid'}}=1};
-	}
-	close $PW;
-	close $SH;
-	close $GR;
-
-	my %checks;
-	@checks{@ARGV} = @ARGV;
-	if (defined $checks{'all'}){
-		$CHECK{'all'}->{'func'}->()
-	} else {
-		foreach (sort keys %checks) {
-			if(defined($CHECK{$_})){
-				$CHECK{$_}->{'func'}->();
-			} else {print "$_ check not implemented\n"; exit 1;}
-		}
-	}
-} else {
-	$CHECK{'help'}->{'func'}->();
 }
 
 INIT {
