@@ -1,0 +1,2 @@
+Copy docker image
+docker save <image> | bzip2 | pv | ssh user@host 'bunzip2 | docker load'
